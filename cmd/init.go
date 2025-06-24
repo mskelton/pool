@@ -22,7 +22,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize worktree pool",
 	Long: `Initialize a worktree pool in the current repository.
-	
+
 You can also convert an existing repository to a bare repository with worktrees,
 or clone a new repository as bare with a pool.`,
 	Run: func(cmd *cobra.Command, args []string) {
