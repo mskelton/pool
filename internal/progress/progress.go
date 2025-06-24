@@ -123,14 +123,14 @@ func (p *ProgressBar) render() {
 func WithProgress(message string, fn func() error) error {
 	spinner := NewSpinner(message)
 	spinner.Start()
-	
+
 	err := fn()
-	
+
 	if err != nil {
 		spinner.Error(fmt.Sprintf("%s failed", message))
 	} else {
 		spinner.Success(fmt.Sprintf("%s completed", message))
 	}
-	
+
 	return err
 }

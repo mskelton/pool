@@ -9,19 +9,19 @@ import (
 
 func TestDefaultConfig(t *testing.T) {
 	cfg := DefaultConfig()
-	
+
 	if cfg.PoolSize != 5 {
 		t.Errorf("Expected default pool size 5, got %d", cfg.PoolSize)
 	}
-	
+
 	if cfg.PoolPrefix != "pool-" {
 		t.Errorf("Expected default pool prefix 'pool-', got %s", cfg.PoolPrefix)
 	}
-	
+
 	if cfg.Editor != "code" {
 		t.Errorf("Expected default editor 'code', got %s", cfg.Editor)
 	}
-	
+
 	if !cfg.AutoRefill {
 		t.Error("Expected auto refill to be true by default")
 	}
@@ -79,7 +79,7 @@ func TestConfigValidation(t *testing.T) {
 			wantErr: true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.config.Validate()
@@ -97,7 +97,7 @@ func TestConfigSaveLoad(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer os.RemoveAll(tmpDir)
-	
+
 	// Create a config
 	cfg := &Config{
 		PoolSize:      8,
@@ -111,41 +111,41 @@ func TestConfigSaveLoad(t *testing.T) {
 			"fix":  "bugfix",
 		},
 	}
-	
+
 	// Save it
 	configPath := filepath.Join(tmpDir, "test-config.json")
 	if err := cfg.Save(configPath); err != nil {
 		t.Fatal(err)
 	}
-	
+
 	// Load it back
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		t.Fatal(err)
 	}
-	
+
 	var loaded Config
 	if err := json.Unmarshal(data, &loaded); err != nil {
 		t.Fatal(err)
 	}
-	
+
 	// Verify values
 	if loaded.PoolSize != cfg.PoolSize {
 		t.Errorf("Expected pool size %d, got %d", cfg.PoolSize, loaded.PoolSize)
 	}
-	
+
 	if loaded.PoolPrefix != cfg.PoolPrefix {
 		t.Errorf("Expected pool prefix %s, got %s", cfg.PoolPrefix, loaded.PoolPrefix)
 	}
-	
+
 	if loaded.Editor != cfg.Editor {
 		t.Errorf("Expected editor %s, got %s", cfg.Editor, loaded.Editor)
 	}
-	
+
 	if loaded.AutoRefill != cfg.AutoRefill {
 		t.Errorf("Expected auto refill %v, got %v", cfg.AutoRefill, loaded.AutoRefill)
 	}
-	
+
 	if len(loaded.Aliases) != len(cfg.Aliases) {
 		t.Errorf("Expected %d aliases, got %d", len(cfg.Aliases), len(loaded.Aliases))
 	}
@@ -160,34 +160,34 @@ func TestConfigMerge(t *testing.T) {
 		AutoRefill:    true,
 		Aliases:       map[string]string{"f": "feature"},
 	}
-	
+
 	override := &Config{
 		PoolSize:   10,
 		Editor:     "nvim",
 		AutoRefill: false,
 		Aliases:    map[string]string{"b": "bugfix"},
 	}
-	
+
 	base.merge(override)
-	
+
 	// Check merged values
 	if base.PoolSize != 10 {
 		t.Errorf("Expected pool size 10, got %d", base.PoolSize)
 	}
-	
+
 	if base.Editor != "nvim" {
 		t.Errorf("Expected editor nvim, got %s", base.Editor)
 	}
-	
+
 	if base.AutoRefill != false {
 		t.Error("Expected auto refill to be false")
 	}
-	
+
 	// Check that unset values weren't changed
 	if base.PoolPrefix != "pool-" {
 		t.Errorf("Expected pool prefix to remain 'pool-', got %s", base.PoolPrefix)
 	}
-	
+
 	// Check aliases were merged
 	if len(base.Aliases) != 2 {
 		t.Errorf("Expected 2 aliases after merge, got %d", len(base.Aliases))

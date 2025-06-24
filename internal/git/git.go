@@ -19,23 +19,23 @@ type Repository struct {
 
 func NewRepository(path string) (*Repository, error) {
 	repo := &Repository{Path: path}
-	
+
 	if err := repo.run("rev-parse", "--git-dir"); err != nil {
 		return nil, errors.ErrNotGitRepo
 	}
-	
+
 	output, err := repo.output("rev-parse", "--is-bare-repository")
 	if err == nil {
 		repo.IsBare = strings.TrimSpace(output) == "true"
 	}
-	
+
 	output, err = repo.output("symbolic-ref", "refs/remotes/origin/HEAD")
 	if err == nil {
 		repo.DefaultBranch = strings.TrimPrefix(strings.TrimSpace(output), "refs/remotes/origin/")
 	} else {
 		repo.DefaultBranch = "main"
 	}
-	
+
 	return repo, nil
 }
 
@@ -85,17 +85,17 @@ func (r *Repository) GetMergedBranches() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	branches := make([]string, 0, len(lines))
-	
+
 	for _, line := range lines {
 		branch := strings.TrimSpace(line)
 		if !strings.Contains(branch, r.DefaultBranch) && strings.HasPrefix(branch, "origin/") {
 			branches = append(branches, strings.TrimPrefix(branch, "origin/"))
 		}
 	}
-	
+
 	return branches, nil
 }
 
@@ -112,7 +112,7 @@ func (r *Repository) run(args ...string) error {
 	cmd.Dir = r.Path
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	
+
 	if err := cmd.Run(); err != nil {
 		return errors.NewGitError(strings.Join(args, " "), err, "")
 	}
@@ -122,16 +122,16 @@ func (r *Repository) run(args ...string) error {
 func (r *Repository) output(args ...string) (string, error) {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = r.Path
-	
+
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	
+
 	err := cmd.Run()
 	if err != nil {
 		return "", errors.NewGitError(strings.Join(args, " "), err, stderr.String())
 	}
-	
+
 	return stdout.String(), nil
 }
 
@@ -140,7 +140,7 @@ func RunInDir(dir string, args ...string) error {
 	cmd.Dir = dir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	
+
 	if err := cmd.Run(); err != nil {
 		return errors.NewGitError(strings.Join(args, " "), err, "")
 	}

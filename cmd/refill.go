@@ -29,11 +29,11 @@ func refillPool() error {
 	if err != nil {
 		return err
 	}
-	
+
 	manager, err := pool.NewManager(repo)
 	if err != nil {
 		return err
 	}
-	
+
 	return manager.Refill(poolSize)
 }

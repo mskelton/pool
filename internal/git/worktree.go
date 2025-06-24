@@ -17,14 +17,14 @@ func (r *Repository) ListWorktrees() ([]Worktree, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var worktrees []Worktree
 	var current Worktree
-	
+
 	scanner := bufio.NewScanner(strings.NewReader(output))
 	for scanner.Scan() {
 		line := scanner.Text()
-		
+
 		if strings.HasPrefix(line, "worktree ") {
 			if current.Path != "" {
 				worktrees = append(worktrees, current)
@@ -38,11 +38,11 @@ func (r *Repository) ListWorktrees() ([]Worktree, error) {
 			current.Bare = true
 		}
 	}
-	
+
 	if current.Path != "" {
 		worktrees = append(worktrees, current)
 	}
-	
+
 	return worktrees, nil
 }
 

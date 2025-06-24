@@ -22,7 +22,7 @@ pre-created worktrees that can be claimed and renamed on demand.`,
 				cmd.Help()
 				return
 			}
-			
+
 			if err := createWorktree(args[0]); err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 				os.Exit(1)
@@ -41,9 +41,9 @@ func init() {
 	if err != nil {
 		cfg = config.DefaultConfig()
 	}
-	
+
 	rootCmd.PersistentFlags().IntVar(&poolSize, "pool-size", cfg.PoolSize, "Number of pre-seeded worktrees")
-	
+
 	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		if cmd.Flags().Changed("pool-size") {
 			cfg.PoolSize = poolSize
