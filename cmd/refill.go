@@ -10,8 +10,9 @@ import (
 )
 
 var refillCmd = &cobra.Command{
-	Use:   "refill",
-	Short: "Refill the worktree pool",
+	Use:     "refill",
+	Aliases: []string{"fill"},
+	Short:   "Refill the worktree pool",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := refillPool(); err != nil {
 			logger.Error("%v", err)

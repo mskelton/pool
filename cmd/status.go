@@ -14,8 +14,9 @@ import (
 )
 
 var statusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "Show pool and worktree status",
+	Use:     "status",
+	Aliases: []string{"depth"},
+	Short:   "Show pool and worktree status",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := showStatus(); err != nil {
 			logger.Error("%v", err)

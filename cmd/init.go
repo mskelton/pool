@@ -19,8 +19,9 @@ var (
 )
 
 var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initialize worktree pool",
+	Use:     "init",
+	Aliases: []string{"dive"},
+	Short:   "Initialize worktree pool",
 	Long: `Initialize a worktree pool in the current repository.
 
 You can also convert an existing repository to a bare repository with worktrees,

@@ -17,8 +17,9 @@ var (
 )
 
 var deinitCmd = &cobra.Command{
-	Use:   "deinit",
-	Short: "Remove worktree pool from the current repository",
+	Use:     "deinit",
+	Aliases: []string{"drain"},
+	Short:   "Remove worktree pool from the current repository",
 	Long: `Remove the worktree pool infrastructure from the current repository.
 
 This command will:
@@ -56,7 +57,7 @@ func runDeinit() error {
 	}
 
 	poolPath := filepath.Join(topLevel, pool.PoolDir)
-	
+
 	if _, err := os.Stat(poolPath); os.IsNotExist(err) {
 		return fmt.Errorf("no worktree pool found in this repository")
 	}
@@ -82,7 +83,7 @@ func runDeinit() error {
 		if strings.Contains(wt.Path, pool.PoolDir) {
 			poolName := filepath.Base(wt.Path)
 			logger.Info("Removing pool worktree: %s", poolName)
-			
+
 			if err := repo.RemoveWorktree(wt.Path); err != nil {
 				logger.Error("Failed to remove worktree %s: %v", poolName, err)
 				if !force {
@@ -103,7 +104,7 @@ func runDeinit() error {
 	}
 
 	logger.Success("Successfully removed worktree pool (%d worktrees removed)", removedCount)
-	
+
 	if repo.IsBare {
 		fmt.Println()
 		logger.Info("Note: This repository is still a bare repository.")

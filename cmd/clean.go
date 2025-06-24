@@ -18,8 +18,9 @@ var (
 )
 
 var cleanCmd = &cobra.Command{
-	Use:   "clean [type]",
-	Short: "Clean up worktrees",
+	Use:     "clean [type]",
+	Aliases: []string{"skim"},
+	Short:   "Clean up worktrees",
 	Long: `Clean up worktrees based on type:
   orphaned - Remove orphaned worktrees
   stale    - Remove worktrees for deleted branches

@@ -16,9 +16,10 @@ var (
 )
 
 var configCmd = &cobra.Command{
-	Use:   "config",
-	Short: "Manage pool configuration",
-	Long:  `Display or modify pool configuration settings.`,
+	Use:     "config",
+	Aliases: []string{"temp"},
+	Short:   "Manage pool configuration",
+	Long:    `Display or modify pool configuration settings.`,
 }
 
 var configShowCmd = &cobra.Command{
