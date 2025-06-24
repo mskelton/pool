@@ -110,8 +110,6 @@ func (r *Repository) FetchOriginPrune() error {
 func (r *Repository) run(args ...string) error {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = r.Path
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
 		return errors.NewGitError(strings.Join(args, " "), err, "")
@@ -138,8 +136,6 @@ func (r *Repository) output(args ...string) (string, error) {
 func RunInDir(dir string, args ...string) error {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
 		return errors.NewGitError(strings.Join(args, " "), err, "")
