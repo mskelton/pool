@@ -73,13 +73,13 @@ func (r *Repository) PruneWorktrees() error {
 	return r.run("worktree", "prune")
 }
 
-func CheckoutBranch(branch string, create bool) error {
+func (r *Repository) CheckoutBranch(branch string, create bool) error {
 	if create {
-		return RunInDir(".", "checkout", "-B", branch)
+		return r.run("checkout", "-B", branch)
 	}
-	return RunInDir(".", "checkout", branch)
+	return r.run("checkout", branch)
 }
 
-func CheckoutNewBranch(branch, source string) error {
-	return RunInDir(".", "checkout", "-B", branch, source)
+func (r *Repository) CheckoutNewBranch(branch, source string) error {
+	return r.run("checkout", "-B", branch, source)
 }

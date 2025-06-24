@@ -76,7 +76,7 @@ func createWorktree(branchName string) error {
 
 	repo.RepairWorktrees()
 
-	go refillPoolAsync(manager, poolName)
+	go refillPoolAsync(manager)
 
 	logger.Success("Opening %s in VS Code...", worktreePath)
 	if err := openInEditor(worktreePath); err != nil {
@@ -101,27 +101,18 @@ func createWorktreeDirect(repo *git.Repository, worktreePath, branchName string)
 }
 
 func setupBranchInPool(repo *git.Repository, poolPath, branchName string) error {
-	originalDir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	defer os.Chdir(originalDir)
-
-	if err := os.Chdir(poolPath); err != nil {
-		return err
-	}
-
+	// Fetch latest changes
 	if err := git.RunInDir(poolPath, "fetch", "origin"); err != nil {
 		return err
 	}
 
 	if repo.RemoteBranchExists(branchName) {
 		logger.Info("Checking out existing branch...")
-		return git.CheckoutNewBranch(branchName, fmt.Sprintf("origin/%s", branchName))
+		return repo.CheckoutNewBranch(branchName, fmt.Sprintf("origin/%s", branchName))
 	}
 
 	logger.Info("Creating new branch...")
-	return git.CheckoutNewBranch(branchName, repo.DefaultBranch)
+	return repo.CheckoutNewBranch(branchName, repo.DefaultBranch)
 }
 
 func openInEditor(path string) error {
@@ -144,7 +135,7 @@ func openInEditor(path string) error {
 	return cmd.Run()
 }
 
-func refillPoolAsync(manager *pool.Manager, poolName string) {
+func refillPoolAsync(manager *pool.Manager) {
 	time.Sleep(2 * time.Second)
 
 	size := poolSize
